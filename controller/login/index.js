@@ -1,10 +1,13 @@
+const userApi = require("../../service/user")
 const { sign } = require("jsonwebtoken")
 const { SECRET } = require("../../config")
+
 module.exports = {
   index: async (ctx, next) => {
     const user = ctx.request.body
     if (user && user.username) {
       let { username } = user
+      userApi.addUser(user)
       const token = sign({ username }, SECRET, {
         expiresIn: "1h"
       })
@@ -20,5 +23,6 @@ module.exports = {
         code: -1
       }
     }
+    await next()
   }
 }
